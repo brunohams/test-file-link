@@ -1,178 +1,2257 @@
 {
-    "uuid": "",
-    "lastMigration": 13,
-    "name": "mockoon-tutorial---generate-mock-data-2",
-    "endpointPrefix": "",
-    "latency": 0,
-    "port": 3000,
-    "routes": [
+    "source": "mockoon:1.14.1",
+    "data": [
         {
-            "uuid": "",
-            "documentation": "Get a list of posts (JSON)",
-            "method": "get",
-            "endpoint": "posts2",
-            "responses": [
-                {
-                    "uuid": "",
-                    "body": "[\r\n  {{#repeat (queryParam 'total' '5')}}\r\n  {\r\n    \"id\": {{@index}},\r\n    \"title\": \"{{faker 'lorem.sentence'}}\",\r\n    \"content\": \"{{faker 'lorem.sentences'}}\",\r\n    \"media\": \"{{faker 'image.nature'}}\",\r\n    \"author\": {\r\n      \"name\": \"{{faker 'name.firstName'}} {{faker 'name.firstName'}}\",\r\n      \"avatar\": \"{{faker 'image.avatar'}}\"\r\n    },\r\n    \"comments\": [\r\n      {{#repeat (faker 'random.number' 5)}}\r\n      {\r\n        \"id\": \"{{faker 'random.uuid'}}\",\r\n        \"content\": \"{{faker 'lorem.sentence'}}\",\r\n        \"author\": {\r\n          \"name\": \"{{faker 'name.firstName'}} {{faker 'name.firstName'}}\",\r\n          \"avatar\": \"{{faker 'image.avatar'}}\"\r\n        }\r\n      }\r\n      {{/repeat}}\r\n    ],\r\n    \"likes\": {{faker 'random.number' 100}},\r\n    \"shares\": {{faker 'random.number' 100}},\r\n    \"location\": {\r\n      \"lat\": {{faker 'address.latitude'}},\r\n      \"long\": {{faker 'address.longitude'}}\r\n    },\r\n    \"archived\": {{faker 'random.boolean'}}\r\n  }\r\n  {{/repeat}}\r\n]",
-                    "latency": 0,
-                    "statusCode": 200,
-                    "label": "Success",
-                    "headers": [
-                        {
-                            "key": "",
-                            "value": ""
-                        }
-                    ],
-                    "filePath": "",
-                    "sendFileAsBody": false,
-                    "rules": [],
-                    "rulesOperator": "OR",
-                    "disableTemplating": false
-                }
-            ],
-            "enabled": true,
-            "randomResponse": false,
-            "sequentialResponse": false
+            "type": "environment",
+            "item": {
+                "uuid": "",
+                "lastMigration": 15,
+                "name": "Ailos",
+                "endpointPrefix": "",
+                "latency": 0,
+                "port": 3000,
+                "routes": [
+                    {
+                        "uuid": "",
+                        "documentation": "Generate random body (JSON, text, CSV, etc) with templating",
+                        "method": "get",
+                        "endpoint": "users",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"Templating example\": \"For more information about templating, click the blue 'i' above this editor\",\n  \"users\": [\n    {{# repeat (queryParam 'total' '10') }}\n      {\n        \"userId\": \"{{ faker 'random.number' min=10000 max=100000 }}\",\n        \"firstname\": \"{{ faker 'name.firstName' }}\",\n        \"lastname\": \"{{ faker 'name.lastName' }}\",\n        \"friends\": [\n          {{# repeat (faker 'random.number' 5) }}\n            {\n              \"id\": \"{{ faker 'random.uuid' }}\"\n            }\n          {{/ repeat }}\n        ]\n      },\n    {{/ repeat }}\n  ],\n  \"total\": \"{{queryParam 'total' '10'}}\"\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "Creates 10 random users, or the amount specified in the 'total' query param",
+                                "headers": [],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Use multiple responses with rules",
+                        "method": "post",
+                        "endpoint": "content/:param1",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"Rules example\": \"Default response. Served if route param 'param1' is not present.\"\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "Default response",
+                                "headers": [],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"Rules example\": \"Content XYZ. Served if route param 'param1' equals 'xyz'. (See in 'Rules' tab)\"\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "Content XYZ",
+                                "headers": [],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [
+                                    {
+                                        "target": "params",
+                                        "modifier": "param1",
+                                        "value": "xyz",
+                                        "isRegex": false
+                                    }
+                                ],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"Rules example\": \"Content not found. Served if route param 'param1' is not equal to 'xyz'. (See in 'Rules' tab)\"\n}\n",
+                                "latency": 0,
+                                "statusCode": 404,
+                                "label": "Content not found",
+                                "headers": [],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [
+                                    {
+                                        "target": "params",
+                                        "modifier": "param1",
+                                        "value": "^(?!.*xyz).*$",
+                                        "isRegex": true
+                                    }
+                                ],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Serve a file dynamically depending on the path param 'pageName'.",
+                        "method": "get",
+                        "endpoint": "file/:pageName",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "Templating is also supported in file path",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "text/html"
+                                    }
+                                ],
+                                "filePath": "./page{{urlParam 'pageName'}}.html",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Path supports various patterns",
+                        "method": "put",
+                        "endpoint": "path/with/pattern(s)?/*",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "The current path will match the following routes: \nhttp://localhost:3000/path/with/pattern/\nhttp://localhost:3000/path/with/patterns/\nhttp://localhost:3000/path/with/patterns/anything-else\n\nLearn more about Mockoon's routing: https://mockoon.com/docs/latest/routing",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "text/plain"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Can Mockoon forward or record entering requests?",
+                        "method": "get",
+                        "endpoint": "forward-and-record",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "Mockoon can also act as a proxy and forward all entering requests that are not caught by declared routes. \nYou can activate this option in the environment settings ('cog' icon in the upper right corner). \nTo learn more: https://mockoon.com/docs/latest/proxy-mode\n\nAs always, all entering requests, and responses from the proxied server will be recorded ('clock' icon in the upper right corner).\nTo learn more: https://mockoon.com/docs/latest/requests-logging",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "text/plain"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "",
+                        "method": "get",
+                        "endpoint": "",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "",
+                                "headers": [],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    }
+                ],
+                "proxyMode": false,
+                "proxyHost": "",
+                "proxyRemovePrefix": false,
+                "https": false,
+                "cors": true,
+                "headers": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "proxyReqHeaders": [
+                    {
+                        "key": "",
+                        "value": ""
+                    }
+                ],
+                "proxyResHeaders": [
+                    {
+                        "key": "",
+                        "value": ""
+                    }
+                ]
+            }
         },
         {
-            "uuid": "",
-            "documentation": "Get a list of location (CSV)",
-            "method": "get",
-            "endpoint": "geoData",
-            "responses": [
-                {
-                    "uuid": "",
-                    "body": "city,state,address,latitude,longitude,timezone\r\n{{#repeat 5000}}\r\n{{faker 'address.city'}},{{faker 'address.stateAbbr'}},{{faker 'address.streetAddress'}},{{faker 'address.latitude'}},{{faker 'address.longitude'}},{{faker 'address.timeZone'}}\r\n{{/repeat}}",
-                    "latency": 0,
-                    "statusCode": 200,
-                    "label": "Success",
-                    "headers": [
-                        {
-                            "key": "Content-Type",
-                            "value": "text/csv"
-                        }
-                    ],
-                    "filePath": "",
-                    "sendFileAsBody": false,
-                    "rules": [],
-                    "rulesOperator": "OR",
-                    "disableTemplating": false
-                }
-            ],
-            "enabled": true,
-            "randomResponse": false,
-            "sequentialResponse": false
+            "type": "environment",
+            "item": {
+                "uuid": "",
+                "lastMigration": 15,
+                "name": "Admissão Digital",
+                "endpointPrefix": "",
+                "latency": 0,
+                "port": 3001,
+                "routes": [
+                    {
+                        "uuid": "",
+                        "documentation": "Lista de Cooperativas",
+                        "method": "get",
+                        "endpoint": "onboarding/cooperatives/:state/:city",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "[\n  {\n    \"id\": \"5d546662767c722adcd1baca\",\n    \"name\": \"Credcrea\",\n    \"slogan\": \"Maior Cooperativa de Crédito segmentada para os profissionais passíveis de inscrição nos sistemas CONFEA/CREA/CAU de SC, PR e RS, bem como os técnicos e tecnólogos. Podem se associar também os familiares de cooperados, estudantes das áreas relacionadas e colaboradores de empresas atuantes nos segmentos de Engenharia e Arquitetura.\",\n    \"confirmationPhrase\": \"Para ser um cooperado da Credcrea, você precisa ser um profissional passível de inscrição nos sistemas CONFEA/CREA/CAU incluindo técnicos e tecnólogos, familiares destes profissionais, estudantes das áreas relacionadas ou proprietário/empregado de empresas nestes segmentos.\",\n    \"logo\": \"https://ailosblobstoragehomol.blob.core.windows.net/cooperativas/Credcrea_h_pos_d_RGB.png\",\n    \"agency\": 566,\n    \"type\": \"{{oneOf (array 'Segmentada' 'LivreAdmissao')}}\",\n    \"fullName\": \"Cooperativa de Economia e Crédito Mútuo dos Profissionais do CREA do Estado de Santa Catarina\",\n    \"sede\": \"Florianópolis / SC\",\n    \"code\": 7\n  }\n]",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Lista de Orgãos emissores",
+                        "method": "get",
+                        "endpoint": "onboarding/agencies",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "[\n  \"SSP\",\n  \"DETRAN\",\n  \"CTPS\",\n  \"Outros\"\n]",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Termos",
+                        "method": "get",
+                        "endpoint": "onboarding/terms",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"Content\": \"<div><p style='width: 100%; text-align: justify; text-justify: inter-word;'>PROPOSTA DE ABERTURA DE MOVIMENTAÇÃO DE CONTA DE DEPÓSITO DO SISTEMA AILOS - PESSOA FÍSICA</p><p style='width: 100%; text-align: justify; text-justify: inter-word;'>1.1. Ao aceitar essa Proposta de Abertura de Movimentação de Conta de Depósito do Sistema Ailos - Pessoa Física, o(a) COOPERADO(A) declara que recebeu, leu e concorda, com todas as disposições deste instrumento e das Condições Gerais Aplicáveis ao Contrato de conta Corrente e Conta Investimento, registrada no Cartório de Títulos e Documentos as quais estão disponíveis no site da COOPERATIVA formando documento único e indivisível.</p><p style='width: 100%; text-align: justify; text-justify: inter-word;'>1.2. A assinatura coletada neste aplicativo será considerada como assinatura válida do(a) COOPERADO(A) e poderá ser utilizada para futuras operações realizadas junto à COOPERATIVA.</p><p style='width: 100%; text-align: justify; text-justify: inter-word;'>1.3. O(a) COOPERADO(A) reconhece que todos os atos praticados mediante aposição de senha numérica e/ou letras de segurança, serão registrados e arquivados em meios magnéticos/digitais, sendo reconhecidos, para todos os fins de direito, como assinatura digital, válidos, verdadeiros e processados por meios seguros e constituirão meio eficaz e prova inequívoca das operações realizadas.</p></div>\"\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Retornar contas já existentes de prospect",
+                        "method": "get",
+                        "endpoint": "onboarding/accounts/:cpf/:cooperativeCode",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "[\n  {\n    \"codigoCooperativa\": 1,\n    \"tipoPessoa\": 1,\n    \"numeroConta\": 6755240\n  }\n]",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Cria um novo contrato",
+                        "method": "post",
+                        "endpoint": "onboarding/contract",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"contractId\": \"6091549f3efeb14710f34a73\"\n}",
+                                "latency": 0,
+                                "statusCode": 201,
+                                "label": "Created",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 404,
+                                "label": "Contrato não encontrado",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Verifica se já existe um contrato de admissão",
+                        "method": "head",
+                        "endpoint": "onboarding/contract/:cpf/:cooperativeId/exists",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "Contrato existe",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 404,
+                                "label": "Contrato não encontrado",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Retorna ID cooperativa de um contrato",
+                        "method": "get",
+                        "endpoint": "onboarding/contract/:cpf/cooperative-id",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"cooperativeId\": \"5d546662767c722adcd1baca\"\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 404,
+                                "label": "Contrato não encontrado",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Envia SMS, contrato existente",
+                        "method": "post",
+                        "endpoint": "onboarding/contract/:cpf/:cooperativeId/sms/send",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"token\": \"60a270ca12119e51e08980de\"\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Envia SMS, novo contrato",
+                        "method": "post",
+                        "endpoint": "onboarding/contract/:cpf/:cooperativeId/:phoneNumber/sms/send",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"token\": \"60a270ca12119e51e08980de\"\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Validar o SMS de contrato existente",
+                        "method": "post",
+                        "endpoint": "onboarding/contract/:cpf/:cooperativeId/sms/validate",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"cpf\": \"09327400909\",\n  \"cooperativeId\": \"5d546662767c722adcd1baca\",\n  \"phoneNumber\": \"47984650727\"\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 403,
+                                "label": "Codigo invalido",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Validar o SMS de novo contrato",
+                        "method": "post",
+                        "endpoint": "onboarding/contract/:cpf/:cooperativeId/:phoneNumber/sms/validate",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"cpf\": \"09327400909\",\n  \"cooperativeId\": \"5d546662767c722adcd1baca\",\n  \"phoneNumber\": \"47984650727\"\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 403,
+                                "label": "Codigo invalido",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Etapas do contrato",
+                        "method": "get",
+                        "endpoint": "onboarding/contract/:id/steps",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"steps\": [\n    {\n      \"tag\": \"{{oneOf (array 'ID_CARD_SCAN' 'DOCUMENT_SCAN' 'ADDITIONAL_INFORMATION' 'SALARY' 'OPT_IN' 'INTERESTS' 'REVISION' 'SIGNATURE')}}\",\n      \"status\": \"{{oneOf (array 'DONE' 'PENDING')}}\"\n    }\n  ]\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 404,
+                                "label": "Contrato não encontrado",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Consulta CEP",
+                        "method": "get",
+                        "endpoint": "onboarding/contract/:id/cep/:cep/consulta",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"cep\": \"89055-180\",\n  \"logradouro\": \"Rua Vinte e Um de Fevereiro\",\n  \"bairro\": \"Fortaleza\",\n  \"complemento\": \"Bloco ABCD\",\n  \"localidade\": \"Blumenau\",\n  \"uf\": \"SC\",\n  \"erro\": \"O CEP não é relacionado à cidade informada anteriormente\"\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 404,
+                                "label": "Contrato não encontrado",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Status do contrato",
+                        "method": "get",
+                        "endpoint": "onboarding/contract/:id/status",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"status\": \"{{oneOf (array 'SEM_CADASTRO' 'CADASTRO_INCOMPLETO' 'REPROVADO' 'APROVADO' 'EM_ANALISE' 'PENDENCIA_COOPERADO' 'EM_ABERTO')}}\",\n  \"cpf\": \"09327400909\",\n  \"socialName\": \"Bruno\",\n  \"agency\": \"01015\",\n  \"account\": \"123456-7\",\n  \"bank\": \"085\"\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 404,
+                                "label": "Contrato não encontrado",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Retorna cooperativa de um contrato",
+                        "method": "get",
+                        "endpoint": "onboarding/contract/:id/cooperative",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"name\": \"Credcrea\",\n  \"slogan\": \"Maior Cooperativa de Crédito segmentada para os profissionais passíveis de inscrição nos sistemas CONFEA/CREA/CAU de SC, PR e RS, bem como os técnicos e tecnólogos. Podem se associar também os familiares de cooperados, estudantes das áreas relacionadas e colaboradores de empresas atuantes nos segmentos de Engenharia e Arquitetura.\",\n  \"sede\": \"Florianópolis / SC\"\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 404,
+                                "label": "Contrato não encontrado",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Salva informações de cooperativa",
+                        "method": "put",
+                        "endpoint": "onboarding/contract/:id/cooperative",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Parametros invalidos",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Envia o contrato para análise",
+                        "method": "post",
+                        "endpoint": "onboarding/contract/:id/submit",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Parametros invalidos",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Tentar novamente",
+                        "method": "post",
+                        "endpoint": "onboarding/contract/:id/retry",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Parametros invalidos",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Retorna dados pessoais ",
+                        "method": "get",
+                        "endpoint": "onboarding/contract/:id/personal-data",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"socialName\": \"Bruno\",\n  \"cpf\": \"09327400909\",\n  \"phone\": 47984650727,\n  \"email\": \"teste@teste.com\"\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 404,
+                                "label": "Contrato não encontrado",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Salva informações de dados pessoais",
+                        "method": "put",
+                        "endpoint": "onboarding/contract/:id/personal-data",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Parametros invalidos",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Retorna dados de documento ",
+                        "method": "get",
+                        "endpoint": "onboarding/contract/:id/document-data",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"type\": \"RG\",\n  \"fullName\": \"Bruno Rafael Hammes\",\n  \"number\": 454646169,\n  \"birthDate\": \"1992-02-28T03:00:00+00:00\",\n  \"issueDate\": \"2010-06-10T03:00:00+00:00\",\n  \"issueEntity\": \"DETRAN\",\n  \"issueUf\": \"SC\"\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 404,
+                                "label": "Contrato não encontrado",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Salva informações de documento",
+                        "method": "put",
+                        "endpoint": "onboarding/contract/:id/document-data",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Parametros invalidos",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Retorna dados de endereços",
+                        "method": "get",
+                        "endpoint": "onboarding/contract/:id/addresses",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "[\n  {\n    \"cep\": \"89036-004\",\n    \"street\": \"Rua João Pessoa\",\n    \"number\": 5654,\n    \"complement\": \"de 1572 a 2614 - lado par\",\n    \"district\": \"Velha\",\n    \"city\": \"Blumenau\",\n    \"uf\": \"SC\",\n    \"isDeliveryAddress\": true\n  }\n]",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 404,
+                                "label": "Contrato não encontrado",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Salva informações de endereços",
+                        "method": "put",
+                        "endpoint": "onboarding/contract/:id/addresses",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Parametros invalidos",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 409,
+                                "label": "Máximo de endereços já cadastrados",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Retorna dados de salario",
+                        "method": "get",
+                        "endpoint": "onboarding/contract/:id/salary",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"salary\": 5500\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 404,
+                                "label": "Contrato não encontrado",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Salva informações de salário",
+                        "method": "put",
+                        "endpoint": "onboarding/contract/:id/salary",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Parametros invalidos",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Retorna as credenciais da JUMIO",
+                        "method": "get",
+                        "endpoint": "onboarding/jumio/credentials",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"key\": \"7z7MVV7z7MV91402027MV914y1iPfmDAiH7z7MV914y1i7z7MVPfmDAiH73z\",\n  \"secret\": \"027MV027MV914y1iPfmDAiH7z914y1iP027MV914y1iPfmDAiH7zfmDAiH7z\"\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Retorna o status de processamento",
+                        "method": "get",
+                        "endpoint": "onboarding/contract/:id/jumio/status",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK - Processado com sucesso",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 202,
+                                "label": "Em processamento",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Erro no processamento",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Salva o reference ID JUMIO",
+                        "method": "put",
+                        "endpoint": "onboarding/contract/:id/id-card-scan/:referenceId",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Parametros invalidos",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Retorna dados complementares ",
+                        "method": "get",
+                        "endpoint": "onboarding/contract/:id/additional-information",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"citizenship\": \"Brasileiro\",\n  \"birthUf\": \"SC\",\n  \"birthCity\": \"Blumenau\"\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 404,
+                                "label": "Contrato não encontrado",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Salva o reference ID JUMIO",
+                        "method": "put",
+                        "endpoint": "onboarding/contract/:id/document-scan/:referenceId",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Parametros invalidos",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Salva informações complementares",
+                        "method": "put",
+                        "endpoint": "onboarding/contract/:id/additional-information",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Parametros invalidos",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Salva informações de contato",
+                        "method": "put",
+                        "endpoint": "onboarding/contract/:id/opt-in",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Parametros invalidos",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Salva informações de interesses",
+                        "method": "put",
+                        "endpoint": "onboarding/contract/:id/interests",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Parametros invalidos",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Salva imagem de assinatura",
+                        "method": "put",
+                        "endpoint": "onboarding/contract/:id/signature",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Parametros invalidos",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    }
+                ],
+                "proxyMode": false,
+                "proxyHost": "",
+                "proxyRemovePrefix": false,
+                "https": false,
+                "cors": true,
+                "headers": [],
+                "proxyReqHeaders": [
+                    {
+                        "key": "",
+                        "value": ""
+                    }
+                ],
+                "proxyResHeaders": [
+                    {
+                        "key": "",
+                        "value": ""
+                    }
+                ]
+            }
         },
         {
-            "uuid": "",
-            "documentation": "Get a list of products (XML)",
-            "method": "get",
-            "endpoint": "products",
-            "responses": [
-                {
-                    "uuid": "",
-                    "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<PRODUCTS>\r\n  {{# repeat 50}}\r\n  <PRODUCT>\r\n    <UUID>{{faker 'random.uuid'}}</UUID>\r\n    <NAME>{{faker 'commerce.product'}}</NAME>\r\n    <PRICE>{{faker 'commerce.price'}}</PRICE>\r\n    <COLOR>{{faker 'commerce.color'}}</COLOR>\r\n    <INVENTORY>{{faker 'random.number' 50}}</INVENTORY>\r\n  </PRODUCT>\r\n  {{/ repeat}}\r\n</PRODUCTS>",
-                    "latency": 0,
-                    "statusCode": 200,
-                    "label": "",
-                    "headers": [
-                        {
-                            "key": "Content-Type",
-                            "value": "application/xml"
-                        }
-                    ],
-                    "filePath": "",
-                    "sendFileAsBody": false,
-                    "rules": [],
-                    "rulesOperator": "OR",
-                    "disableTemplating": false
-                }
-            ],
-            "enabled": true,
-            "randomResponse": false,
-            "sequentialResponse": false
+            "type": "environment",
+            "item": {
+                "uuid": "",
+                "lastMigration": 15,
+                "name": "Esqueci Senhas",
+                "endpointPrefix": "",
+                "latency": 0,
+                "port": 3002,
+                "routes": [
+                    {
+                        "uuid": "",
+                        "documentation": "",
+                        "method": "get",
+                        "endpoint": "",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "",
+                                "headers": [],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    }
+                ],
+                "proxyMode": false,
+                "proxyHost": "",
+                "proxyRemovePrefix": false,
+                "https": false,
+                "cors": true,
+                "headers": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "proxyReqHeaders": [
+                    {
+                        "key": "",
+                        "value": ""
+                    }
+                ],
+                "proxyResHeaders": [
+                    {
+                        "key": "",
+                        "value": ""
+                    }
+                ]
+            }
         },
         {
-            "uuid": "",
-            "documentation": "Create a user",
-            "method": "post",
-            "endpoint": "users",
-            "responses": [
-                {
-                    "uuid": "",
-                    "body": "{\r\n  \"id\": \"{{faker 'random.uuid'}}\",\r\n  \"firstname\": \"{{body 'firstname'}}\",\r\n  \"lastname\": \"{{body 'lastname'}}\",\r\n  \"birthdate\": \"{{body 'birthdate'}}\",\r\n  \"email\": \"{{body 'email'}}\",\r\n  \"createdAt\": \"{{now}}\"\r\n}",
-                    "latency": 0,
-                    "statusCode": 201,
-                    "label": "Created",
-                    "headers": [
-                        {
-                            "key": "",
-                            "value": ""
-                        }
-                    ],
-                    "filePath": "",
-                    "sendFileAsBody": false,
-                    "rules": [],
-                    "rulesOperator": "OR",
-                    "disableTemplating": false
-                }
-            ],
-            "enabled": true,
-            "randomResponse": false,
-            "sequentialResponse": false
-        },
-        {
-            "uuid": "",
-            "documentation": "Get a list of products or materials",
-            "method": "get",
-            "endpoint": "inventory/:type",
-            "responses": [
-                {
-                    "uuid": "",
-                    "body": "[\r\n  {{#repeat (queryParam 'total' '5')}}\r\n  {\r\n    \"id\": \"{{faker 'random.uuid'}}\",\r\n    {{# switch (urlParam 'type')}}\r\n    {{# case 'products'}}\r\n    \"name\": \"{{faker 'commerce.product'}}\",\r\n    \"price\": \"{{faker 'commerce.price'}} EUR\"\r\n    {{/ case}}\r\n    {{# case 'materials'}}\r\n    \"name\": \"{{faker 'commerce.productMaterial'}}\",\r\n    \"quantity\": \"{{faker 'random.number' 50}}\"\r\n    {{/ case}}\r\n    {{/ switch}}\r\n  }\r\n  {{/repeat}}\r\n]",
-                    "latency": 0,
-                    "statusCode": 200,
-                    "label": "Success",
-                    "headers": [
-                        {
-                            "key": "",
-                            "value": ""
-                        }
-                    ],
-                    "filePath": "",
-                    "sendFileAsBody": false,
-                    "rules": [],
-                    "rulesOperator": "OR",
-                    "disableTemplating": false
-                }
-            ],
-            "enabled": true,
-            "randomResponse": false,
-            "sequentialResponse": false
+            "type": "environment",
+            "item": {
+                "uuid": "",
+                "lastMigration": 15,
+                "name": "Redefinição de senhas",
+                "endpointPrefix": "",
+                "latency": 0,
+                "port": 3003,
+                "routes": [
+                    {
+                        "uuid": "",
+                        "documentation": "Retorna cooperativas",
+                        "method": "get",
+                        "endpoint": "Conta/Cooperativas",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"cooperatives\": [\n    {\n      \"Codigo\": {{faker 'random.number'}},\n      \"CodigoAgencia\": \"\",\n      \"NomeResumido\": \"\"\n    }\n  ]\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Retorna titulares de uma conta",
+                        "method": "post",
+                        "endpoint": "Conta/Titulares",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"NomeConta\": \"MARIA IZABEL PINHEIRO SANDRI\",\n  \"Titulares\": [\n    {\n      \"Codigo\": 1,\n      \"Nome\": \"MARIA IZABEL PINHEIRO SANDRI\",\n      \"IndicadorPessoa\": 1,\n      \"IndicadorCadastroFrase\": 1,\n      \"MensagemPrazoAcesso\": \"\"\n    }\n  ]\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Envia dados para iniciar recuperacao de senha",
+                        "method": "post",
+                        "endpoint": "EsqueciSenha/EnviarDados",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"Email\": \"ra****l@gmail.com\",\n  \"Telefone\": \"(47) 98***-**21\"\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Erro - Favor falar com SAC",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Envia código para validar cadastro",
+                        "method": "post",
+                        "endpoint": "EsqueciSenha/EnviarCodigo",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Erro - Favor falar com SAC",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Envia dados para iniciar recuperacao de senha",
+                        "method": "post",
+                        "endpoint": "EsqueciSenha/ValidarCodigo",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"TokenSMS\": \"a7e92e7c-54ed-445d-b6cf-43c633ecd2a6\"\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Erro",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/text"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Retorna os dados de perguntas de segurança",
+                        "method": "get",
+                        "endpoint": "EsqueciSenha/:tokenSMS/ObterPerguntas",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "[\n  {\n    \"Tag\": \"{{oneOf (array 'POSSUI_APLICACAO_PROGRAMADA' 'POSSUI_CONTRATO_EMPRESTIMO_ATIVO' 'POSSUI_CHAVE_PIX_CADASTRADA' 'POSSUI_LIMITE_DE_CHEQUE_ESPECIAL' 'POSSUI_CREDITO_PRE_APROVADO' 'REALIZOU_ADESAO_DEPOSITO_CHEQUE' 'UTILIZANDO_CHEQUE_ESPECIAL_DISPONIVEL')}}\",\n    \"Pergunta\": \"Possui Aplicação Programada (Poupança)?\"\n  }\n]",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Erro",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Valida as respostas das perguntas de segurança",
+                        "method": "post",
+                        "endpoint": "EsqueciSenha/:tokenSMS/ValidarRespostas",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{\n  \"TokenSenha\": \"507416b4-cf09-11eb-b8bc-0242ac130003\"\n}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "OK",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Respostas inválidas, tente novamente",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "Valida as respostas das perguntas de segurança",
+                        "method": "post",
+                        "endpoint": "EsqueciSenha/:tokenSMS/:tokenSenha/AlterarSenhas",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "Senhas alteradas com sucesso",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            },
+                            {
+                                "uuid": "",
+                                "body": "",
+                                "latency": 0,
+                                "statusCode": 400,
+                                "label": "Erro ao alterar senha",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false,
+                        "sequentialResponse": false
+                    }
+                ],
+                "proxyMode": false,
+                "proxyHost": "",
+                "proxyRemovePrefix": false,
+                "https": false,
+                "cors": true,
+                "headers": [],
+                "proxyReqHeaders": [
+                    {
+                        "key": "",
+                        "value": ""
+                    }
+                ],
+                "proxyResHeaders": [
+                    {
+                        "key": "",
+                        "value": ""
+                    }
+                ]
+            }
         }
-    ],
-    "proxyMode": false,
-    "proxyHost": "",
-    "https": false,
-    "cors": true,
-    "headers": [
-        {
-            "key": "Content-Type",
-            "value": "application/json"
-        }
-    ],
-    "proxyReqHeaders": [
-        {
-            "key": "",
-            "value": ""
-        }
-    ],
-    "proxyResHeaders": [
-        {
-            "key": "",
-            "value": ""
-        }
-    ],
-    "proxyRemovePrefix": false
+    ]
 }
